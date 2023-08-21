@@ -48,7 +48,7 @@ client.on('serverError', async (error) => {
   }
 });
 
-/*process.on('uncaughtException', async (error) => {
+process.on('uncaughtException', async (error) => {
   try {
     const webhook = new WebhookClient({
       url: process.env.DISCORD_WEBHOOK_URL,
@@ -58,7 +58,19 @@ client.on('serverError', async (error) => {
   } catch (sendError) {
     console.error('Error sending notification:', sendError.message);
   }
-});*/
+});
+
+process.on('exit', async (error) => {
+  try {
+    const webhook = new WebhookClient({
+      url: process.env.DISCORD_WEBHOOK_URL,
+    });
+    await webhook.send(`Uncaught Exception: ${error.message}`);
+    console.log('Notification sent');
+  } catch (sendError) {
+    console.error('Error sending notification:', sendError.message);
+  }
+});
 
 const port = 3000;
 app.listen(port, () => {
