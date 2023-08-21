@@ -1,5 +1,3 @@
-const client = require('./discordClient');
-
 const errorMessages = {
   client: {
     // 400 Client Error
@@ -48,7 +46,6 @@ const errorMessages = {
 module.exports = {
   clientError: (res, errorKey, statusCode = 400) => {
     const errorMessage = errorMessages.client[errorKey];
-    client.emit('clientError', errorMessage);
     res.status(statusCode).json({ error: errorMessage });
   },
   serverError: (res, error, errorKey) => {
@@ -60,7 +57,6 @@ module.exports = {
       console.error('MySQL error message:', error.sqlMessage);
       console.error('MySQL query:', error.sql);
     }
-    client.emit('serverError', errorMessage);
     res.status(500).json({ error: errorMessage });
   },
 };
