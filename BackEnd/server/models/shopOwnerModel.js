@@ -60,11 +60,16 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  basicInfoUpdate: async (userId, arr, rules, service_and_equipment) => {
+  basicInfoUpdate: async (
+    userId,
+    basicInfoArr,
+    rules,
+    service_and_equipment,
+  ) => {
     const insertBasicInfo = `UPDATE shops SET shop_name = ?, type = ?, nearest_MRT=?, introduction = ?, opening_hour = ?, closing_hour = ?, address = ?, telephone = ?, facebook = ?, ig = ?, line = ?, time_limit = ?, min_order = ?, plug = ?, wifi = ?, smoking_area = ?, dog = ?, cat = ?, primary_image = ?, secondary_image_1 = ?, secondary_image_2 = ?, rules = ?, service_and_equipment = ? WHERE id = ?`;
     try {
       await pool.query(insertBasicInfo, [
-        ...arr,
+        ...basicInfoArr,
         rules,
         service_and_equipment,
         userId,
