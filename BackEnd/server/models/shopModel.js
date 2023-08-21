@@ -76,32 +76,33 @@ module.exports = {
     }
   },
   getBasicInfo: async (cafeId, userId) => {
+    let queryParams = [cafeId];
     try {
+      let wishlistQuery = '';
+
+      if (userId) {
+        wishlistQuery += `, IF(
+          (SELECT wishlists.id FROM wishlists 
+          LEFT JOIN wishlist_items 
+          ON wishlists.id = wishlist_items.wishlist_id 
+          WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) > 0, true, false) AS wishlist_item`;
+        queryParams.unshift(userId);
+      }
+
       let query = `
       SELECT shops.id, shop_name, type, introduction, opening_hour, closing_hour, 
       primary_image, secondary_image_1, secondary_image_2, address, telephone, facebook, ig, line, 
       rules, service_and_equipment, 
       DATE_FORMAT(menu_last_updated, "%Y-%m-%d %H:%i:%s") AS menu_last_updated, 
       menus.category, 
-      GROUP_CONCAT(CONCAT(menus.item, '$', menus.price)) AS menu_items`;
-      if (userId) {
-        query += `, IF(
-          (SELECT wishlists.id FROM wishlists 
-          LEFT JOIN wishlist_items 
-          ON wishlists.id = wishlist_items.wishlist_id 
-          WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) > 0, true, false) AS wishlist_item`;
-      }
-      query += ` FROM shops
+      GROUP_CONCAT(CONCAT(menus.item, '$', menus.price)) AS menu_items
+      ${wishlistQuery}
+      FROM shops
       INNER JOIN menus ON shops.id = menus.cafe_id
       WHERE shops.id = ? AND is_published = true
       GROUP BY shops.id, menus.category`;
-      let result;
-      if (userId) {
-        [result] = await pool.query(query, [userId, cafeId]);
-      } else {
-        [result] = await pool.query(query, [cafeId]);
-      }
-      console.log(result);
+
+      const [result] = await pool.query(query, [...queryParams]);
       return result;
     } finally {
       await pool.releaseConnection();
@@ -176,7 +177,6 @@ module.exports = {
     const query = `SELECT id FROM shops WHERE id = ? AND is_published = true`;
     try {
       const [[result]] = await pool.query(query, cafeId);
-      console.log('result:', result);
       return result;
     } finally {
       await pool.releaseConnection();

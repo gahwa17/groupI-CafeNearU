@@ -71,19 +71,21 @@ module.exports = {
   },
   getBasicInfo: async (req, res) => {
     const cafeId = req.params.id * 1;
+
     const cafeProfileExistence = await model.findPublishedCafeProfileById(
       cafeId,
     );
-    console.log(cafeProfileExistence);
     if (!cafeProfileExistence) {
       return errorHandler.clientError(res, 'profileNotFound', 404);
     }
-    let userId;
-    if (process.env.HAS_ACCOUNT === 'true') {
-      console.log('user has login');
-      userId = extractUserIDFromToken(req);
-    }
+
+    const userId =
+      process.env.HAS_ACCOUNT === 'true'
+        ? extractUserIDFromToken(req)
+        : undefined;
+
     const result = await model.getBasicInfo(cafeId, userId);
+
     const shopObj = {
       id: result[0].id,
       name: result[0].shop_name,
@@ -104,17 +106,11 @@ module.exports = {
       rules: result[0].rules,
       service_and_equipment: result[0].service_and_equipment,
     };
-    const menuObj = {
-      menu: {
-        last_updated: result[0].menu_last_updated,
-        categories: [],
-        items: [],
-      },
-    };
+
+    const menuCategories = [];
+    const menuItems = [];
     for (let i = 0; i < result.length; i++) {
-      menuObj.menu.categories.push(result[i].category);
-    }
-    for (let i = 0; i < result.length; i++) {
+      menuCategories.push(result[i].category);
       const itemArr = result[i].menu_items.split(',');
       const itemObj = itemArr.map((el, index) => {
         const [name, price] = el.split('$');
@@ -124,8 +120,17 @@ module.exports = {
           price,
         };
       });
-      menuObj.menu.items.push(itemObj);
+      menuItems.push(itemObj);
     }
+
+    const menuObj = {
+      menu: {
+        last_updated: result[0].menu_last_updated,
+        categories: menuCategories,
+        items: menuItems,
+      },
+    };
+
     res.status(200).json({ data: { shop: { ...shopObj, ...menuObj } } });
   },
   getCurrentStatus: async (req, res) => {
