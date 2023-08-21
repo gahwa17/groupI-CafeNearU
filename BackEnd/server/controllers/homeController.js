@@ -28,27 +28,31 @@ async function processShopType(type, userId, cafeNumbersPerType, model) {
 
 module.exports = {
   getHomepage: async (req, res) => {
-    const cafeNumbersPerType = 3;
+    try {
+      const cafeNumbersPerType = 3;
 
-    const userId =
-      process.env.HAS_ACCOUNT === 'true'
-        ? extractUserIDFromToken(req)
-        : undefined;
+      const userId =
+        process.env.HAS_ACCOUNT === 'true'
+          ? extractUserIDFromToken(req)
+          : undefined;
 
-    const [leisure, pet, workspace] = await Promise.all([
-      processShopType('休閒', userId, cafeNumbersPerType, model),
-      processShopType('寵物', userId, cafeNumbersPerType, model),
-      processShopType('工作', userId, cafeNumbersPerType, model),
-    ]);
+      const [leisure, pet, workspace] = await Promise.all([
+        processShopType('休閒', userId, cafeNumbersPerType, model),
+        processShopType('寵物', userId, cafeNumbersPerType, model),
+        processShopType('工作', userId, cafeNumbersPerType, model),
+      ]);
 
-    res.status(200).json({
-      data: {
-        shops: {
-          leisure,
-          pet,
-          workspace,
+      res.status(200).json({
+        data: {
+          shops: {
+            leisure,
+            pet,
+            workspace,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
 };
