@@ -5,7 +5,7 @@ require('dotenv').config();
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 const serverUrl = `https://13.211.10.154/`;
-const checkInterval = 180000000;
+const checkInterval = 180000;
 
 function performHealthCheck() {
   https
