@@ -1,4 +1,4 @@
-const client = require('./discord');
+const client = require('./discordClient');
 
 const errorMessages = {
   client: {
