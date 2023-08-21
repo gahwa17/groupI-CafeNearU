@@ -27,7 +27,7 @@ module.exports = {
     const userId =
       process.env.HAS_ACCOUNT === 'true' ? extractUserIDFromToken(req) : null;
 
-    const result = await model.search(
+    const filterOptions = {
       keyword,
       type,
       plug,
@@ -40,7 +40,8 @@ module.exports = {
       userId,
       cursor,
       itemsPerQuery,
-    );
+    };
+    const result = await model.search(filterOptions);
 
     let shopArr = [];
     for (let i = 0; i < itemsPerPage; i++) {
