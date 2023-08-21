@@ -5,7 +5,7 @@ const wishListController = require('../controllers/wishListController');
 const { userAuthorization } = require('../util/common');
 
 router.post('/', userAuthorization, wishListController.createWishList);
-router.get('/', userAuthorization, wishListController.getWishList);
+router.get('/:customer_id', userAuthorization, wishListController.getWishList);
 router.get(
   '/:wishlist_id/cafe',
   userAuthorization,
