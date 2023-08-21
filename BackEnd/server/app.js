@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { updateCommentDashboard } = require('./models/scheduleTask');
-const client = require('./util/discord');
+const client = require('./util/discordClient');
 const { WebhookClient } = require('discord.js');
 
 const app = express();
@@ -60,12 +60,12 @@ process.on('uncaughtException', async (error) => {
   }
 });
 
-process.on('exit', async (error) => {
+process.on('SIGTERM', async (error) => {
   try {
     const webhook = new WebhookClient({
       url: process.env.DISCORD_WEBHOOK_URL,
     });
-    await webhook.send(`Uncaught Exception: ${error.message}`);
+    await webhook.send(`Server Shuts Down: ${error.message}`);
     console.log('Notification sent');
   } catch (sendError) {
     console.error('Error sending notification:', sendError.message);
