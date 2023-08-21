@@ -71,6 +71,8 @@ module.exports = {
         id: decoded.id,
         name: decoded.name,
       };
+
+      req.user = userData; // 將解析後的使用者資料儲存在 req.user
       next();
     } catch (error) {
       errorHandler.clientError(res, 'invalidToken', 403);
