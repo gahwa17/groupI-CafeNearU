@@ -19,16 +19,9 @@ module.exports = {
 
     let queryParams = [cursor];
 
-    let basicQuery = `SELECT shops.id, shop_name, primary_image,
-    address, operating_status, 
-    GROUP_CONCAT(
-      '{ "icon": "', seats.icon, '", "type": "', seats.type,
-      '", "available_seats": ', seats.available_seats,
-      ', "total_seats": ', seats.total_seats, ' }'
-    ) AS seat_info`;
-
+    let wishlist_item = '';
     if (userId) {
-      basicQuery += `, IF(
+      wishlist_item += `, IF(
           (SELECT wishlists.id FROM wishlists 
           LEFT JOIN wishlist_items 
           ON wishlists.id = wishlist_items.wishlist_id 
@@ -68,14 +61,22 @@ module.exports = {
       conditions += ` AND time_limit = false`;
     }
 
-    basicQuery += ` FROM shops
-      LEFT JOIN seats ON shops.id = seats.cafe_id
-      WHERE is_published = true AND shops.id > ?${conditions}
-      GROUP BY shops.id
-      LIMIT ${itemsPerQuery} ;`;
+    let query = `SELECT shops.id, shop_name, primary_image,
+    address, operating_status, 
+    GROUP_CONCAT(
+      '{ "icon": "', seats.icon, '", "type": "', seats.type,
+      '", "available_seats": ', seats.available_seats,
+      ', "total_seats": ', seats.total_seats, ' }'
+    ) AS seat_info
+    ${wishlist_item}
+    FROM shops
+    LEFT JOIN seats ON shops.id = seats.cafe_id
+    WHERE is_published = true AND shops.id > ?${conditions}
+    GROUP BY shops.id
+    LIMIT ${itemsPerQuery} ;`;
 
     try {
-      const [result] = await pool.query(basicQuery, queryParams);
+      const [result] = await pool.query(query, queryParams);
       return result;
     } finally {
       await pool.releaseConnection();
