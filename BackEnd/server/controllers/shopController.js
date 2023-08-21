@@ -1,12 +1,5 @@
 const errorHandler = require('../util/errorHandler');
-const {
-  bcrypt,
-  jwt,
-  jwtSecret,
-  extractUserIDFromToken,
-  validateEmail,
-  validateProvider,
-} = require('../util/common');
+const { extractUserIDFromToken } = require('../util/common');
 
 const model = require('../models/shopModel');
 
