@@ -28,7 +28,7 @@ app.use('/api/1.0/wishLists', wishListRoutes);
 app.use('/api/1.0/shop-owners', shopOwnerRoutes);
 app.use('/api/1.0/shops', shopRoutes);
 
-const intervalTime = 30000; // 30s
+const intervalTime = 12 * 60 * 60 * 1000; // 12 hours
 updateCommentDashboard();
 setInterval(updateCommentDashboard, intervalTime);
 
