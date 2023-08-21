@@ -1,5 +1,6 @@
 const model = require('../models/homeModel');
 const { extractUserIDFromToken } = require('../util/common');
+const errorHandler = require('../util/errorHandler');
 
 function getRandomItemsFromArray(array, count) {
   const shuffledArray = array.slice();
@@ -29,7 +30,7 @@ async function processShopType(type, userId, cafeNumbersPerType, model) {
 module.exports = {
   getHomepage: async (req, res) => {
     try {
-      const cafeNumbersPerType = 3;
+      const cafeNumbersPerType = 2;
 
       const userId =
         process.env.HAS_ACCOUNT === 'true'
