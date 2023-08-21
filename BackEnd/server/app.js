@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { updateCommentDashboard } = require('./models/scheduleTask');
-const client = require('./util/discordClient');
-const { WebhookClient } = require('discord.js');
 
 const app = express();
 
@@ -31,34 +29,6 @@ app.use('/api/1.0/shops', shopRoutes);
 const intervalTime = 12 * 60 * 60 * 1000; // 12 hours
 updateCommentDashboard();
 setInterval(updateCommentDashboard, intervalTime);
-
-client.on('clientError', async (error) => {
-  const guild = await client.guilds.fetch(process.env.DISCORD_SERVER_ID);
-  const channel = await guild.channels.fetch(process.env.DISCORD_CHANNEL_ID);
-  if (channel) {
-    channel.send(`Client Error: ${error}`);
-  }
-});
-
-client.on('serverError', async (error) => {
-  const guild = await client.guilds.fetch(process.env.DISCORD_SERVER_ID);
-  const channel = await guild.channels.fetch(process.env.DISCORD_CHANNEL_ID);
-  if (channel) {
-    channel.send(`Server Error: ${error}`);
-  }
-});
-
-process.on('uncaughtException', async (error) => {
-  try {
-    const webhook = new WebhookClient({
-      url: process.env.DISCORD_WEBHOOK_URL,
-    });
-    await webhook.send(`Uncaught Exception: ${error.message}`);
-    console.log('Notification sent');
-  } catch (sendError) {
-    console.error('Error sending notification:', sendError.message);
-  }
-});
 
 const port = 3000;
 app.listen(port, () => {
