@@ -115,8 +115,8 @@ module.exports = {
         await pool.query(deleteSeats, userId);
       }
       const seatTypeArr = seats.map((item) => [
-        seats.icon,
-        seats.type,
+        item.icon,
+        item.type,
         item.total_seats,
         userId,
       ]);
@@ -129,6 +129,7 @@ module.exports = {
     const findSeatSetting = `SELECT id FROM seats WHERE type = ? AND cafe_id = ?`;
     try {
       const [hasSeat] = await pool.query(findSeatSetting, [type, userId]);
+      console.log(hasSeat);
       if (hasSeat.length === 0) {
         return 'Seat Not Found';
       }
