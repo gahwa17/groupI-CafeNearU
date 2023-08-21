@@ -14,7 +14,7 @@ module.exports = {
     SELECT
       DISTINCT w.id,
       w.name,
-      (COALESCE(s.primary_image, 'https://13.211.10.154/default-cover.jpeg')) AS cover
+      (COALESCE(s.primary_image, 'https://13.211.10.154/shopPics/default-cover.jpeg')) AS cover
     FROM
       wishlists w
     LEFT JOIN wishlist_items wi 
