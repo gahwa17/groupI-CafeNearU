@@ -169,7 +169,129 @@ module.exports = {
       pool.releaseConnection();
     }
   },
-  getComments: () => {
-    return 'get all comment';
+  getComments: async (loggedUserID, cafeID, cursor) => {
+    const summaryQuery = `
+    SELECT
+      cd.comment_count AS total_comments,
+      CONCAT(ROUND(cd.is_quiet * 100), '%') AS is_quiet,
+      cd.average_total_rating,
+      cd.average_cleanliness,
+      cd.average_service,
+      cd.average_food,
+      cd.average_wifi,
+      cd.average_atmosphere
+    FROM comment_dashboard cd
+    WHERE
+        cd.cafe_id = ?
+    ORDER BY
+        cd.id DESC`;
+
+    const [summary] = await pool.query(summaryQuery, cafeID);
+    let params = [];
+    let comments = null;
+
+    // 有登入
+    if (loggedUserID) {
+      if (cursor) {
+        const query = `
+        WITH UserComments AS (
+          SELECT c.id, c.total_rating, DATE_FORMAT(c.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, c.context, cr.id as user_id, cr.name as user_name, cr.picture as user_picture, cr.school as user_school
+          FROM comments c
+          JOIN customers cr ON c.customer_id = cr.id
+          WHERE c.customer_id = ? AND c.cafe_id = ?
+        ),
+        OtherComments AS (
+            SELECT c.id, c.total_rating, DATE_FORMAT(c.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, c.context, cr.id as user_id, cr.name as user_name, cr.picture as user_picture, cr.school as user_school
+            FROM comments c
+            JOIN customers cr ON c.customer_id = cr.id
+            WHERE c.customer_id != ? AND c.cafe_id = ? AND c.id <= ?
+            ORDER BY c.id DESC LIMIT 6
+        )
+        SELECT * FROM UserComments
+        UNION ALL
+        SELECT * FROM OtherComments;
+        `;
+        params = [loggedUserID, cafeID, loggedUserID, cafeID, cursor];
+        [comments] = await pool.query(query, params);
+      } else {
+        const query = `
+        WITH UserComments AS (
+          SELECT c.id, c.total_rating, DATE_FORMAT(c.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, c.context, cr.id as user_id, cr.name as user_name, cr.picture as user_picture, cr.school as user_school
+          FROM comments c
+          JOIN customers cr ON c.customer_id = cr.id
+          WHERE c.customer_id = ? AND c.cafe_id = ?
+        ),
+        OtherComments AS (
+            SELECT c.id, c.total_rating, DATE_FORMAT(c.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, c.context, cr.id as user_id, cr.name as user_name, cr.picture as user_picture, cr.school as user_school
+            FROM comments c
+            JOIN customers cr ON c.customer_id = cr.id
+            WHERE c.customer_id != ? AND c.cafe_id = ?
+            ORDER BY c.id DESC LIMIT 6
+        )
+        SELECT * FROM UserComments
+        UNION ALL
+        SELECT * FROM OtherComments;
+        `;
+        params = [loggedUserID, cafeID, loggedUserID, cafeID];
+        [comments] = await pool.query(query, params);
+      }
+    }
+    // 沒登入
+    else {
+      if (cursor) {
+        const query = `
+        SELECT c.id, c.total_rating, DATE_FORMAT(c.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, c.context, cr.id as user_id, cr.name as user_name, cr.picture as user_picture, cr.school as user_school
+        FROM comments c
+        JOIN customers cr ON c.customer_id = cr.id
+        WHERE c.cafe_id = ? AND c.id <= ?
+        ORDER BY c.id DESC LIMIT 6
+        `;
+        params = [cafeID, cursor];
+        [comments] = await pool.query(query, params);
+      } else {
+        const query = `
+        SELECT c.id, c.total_rating, DATE_FORMAT(c.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, c.context, cr.id as user_id, cr.name as user_name, cr.picture as user_picture, cr.school as user_school
+        FROM comments c
+        JOIN customers cr ON c.customer_id = cr.id
+        WHERE c.cafe_id = ?
+        ORDER BY c.id DESC LIMIT 6
+        `;
+        params = [cafeID];
+        [comments] = await pool.query(query, params);
+      }
+    }
+
+    let formattedComments = [];
+    let next_cursor = null;
+
+    comments.forEach((row, index) => {
+      if (!loggedUserID && index === 5) {
+        next_cursor = row.id;
+        return;
+      }
+
+      if (loggedUserID && index === 6) {
+        next_cursor = row.id;
+        return;
+      }
+
+      const comment = {
+        id: row.id,
+        rating: row.total_rating,
+        created_at: row.created_at,
+        context: row.context,
+        user: {
+          id: row.user_id,
+          name: row.user_name,
+          picture: row.user_picture,
+          school: row.user_school,
+        },
+      };
+
+      formattedComments.push(comment);
+    });
+
+    // console.log('formattedComments:', formattedComments);
+    return { summary: summary[0], formattedComments, next_cursor };
   },
 };

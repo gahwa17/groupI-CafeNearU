@@ -1,14 +1,8 @@
 const errorHandler = require('../util/errorHandler');
-const {
-  bcrypt,
-  jwt,
-  jwtSecret,
-  extractUserIDFromToken,
-  validateEmail,
-  validateProvider,
-} = require('../util/common');
+const { extractUserIDFromToken } = require('../util/common');
 
 const model = require('../models/shopModel');
+const { response } = require('express');
 
 module.exports = {
   search: async (req, res) => {
@@ -251,6 +245,37 @@ module.exports = {
     }
   },
   getComments: async (req, res) => {
-    res.json(model.getComments());
+    try {
+      const cafeID = parseInt(req.params.id);
+      const loggedUserID = req.user ? req.user.id : null;
+      const cursor = parseInt(req.query.cursor);
+
+      // console.log('loggedUserID: ', loggedUserID);
+      // console.log('cursor: ', cursor);
+
+      try {
+        let results = [];
+        if (loggedUserID) {
+          results = await model.getComments(loggedUserID, cafeID, cursor);
+        } else {
+          results = await model.getComments(loggedUserID, cafeID, cursor);
+        }
+
+        const responseData = {
+          data: {
+            summary: results.summary,
+            comments: results.formattedComments,
+            next_cursor: results.next_cursor,
+          },
+        };
+
+        res.status(200).json(responseData);
+      } catch (error) {
+        // console.log('error:', error);
+        errorHandler.serverError(res, error, 'sqlquery');
+      }
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
   },
 };
