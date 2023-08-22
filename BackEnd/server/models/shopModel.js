@@ -21,11 +21,11 @@ module.exports = {
 
     let wishlist_item = '';
     if (userId) {
-      wishlist_item += `, IF(
+      wishlist_item += `,
           (SELECT wishlists.id FROM wishlists 
           LEFT JOIN wishlist_items 
           ON wishlists.id = wishlist_items.wishlist_id 
-          WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) > 0, true, false) AS wishlist_item`;
+          WHERE wishlist_items.cafe_id = shops.id AND customer_id = ? ) AS wishlist_item`;
       queryParams.unshift(userId);
     }
 
