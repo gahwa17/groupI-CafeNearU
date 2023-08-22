@@ -13,7 +13,6 @@ function generateImageURL(image) {
   if (!image || !image[0]?.filename) {
     return null;
   }
-  console.log(process.env.HOST_NAME);
   return `https://${process.env.HOST_NAME}/shopPics/${image[0].filename}`;
 }
 
@@ -290,7 +289,6 @@ module.exports = {
       }
 
       const primaryImg = generateImageURL(req.files.primary_image);
-      console.log(primaryImg);
       const secondaryImg1 = generateImageURL(req.files.secondary_image_1);
       const secondaryImg2 = generateImageURL(req.files.secondary_image_2);
 
