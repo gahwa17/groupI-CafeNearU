@@ -98,4 +98,22 @@ module.exports = {
       pool.releaseConnection();
     }
   },
+  isCafeAddedByCustomer: async (customer_id, cafe_id) => {
+    const query = `
+      SELECT
+        COUNT(*) AS count
+      FROM
+        wishlists AS w
+      INNER JOIN
+        wishlist_items AS wi ON w.id = wi.wishlist_id
+      WHERE
+        w.customer_id = ? AND wi.cafe_id = ?;
+    `;
+    try {
+      const [result] = await pool.query(query, [customer_id, cafe_id]);
+      return result[0].count == 1;
+    } finally {
+      pool.releaseConnection();
+    }
+  },
 };

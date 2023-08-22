@@ -13,7 +13,7 @@ function generateImageURL(image) {
   if (!image || !image[0]?.filename) {
     return null;
   }
-  return `https://${process.env.HOSTNAME}/shopPics/${image[0].filename}`;
+  return `https://${process.env.HOST_NAME}/shopPics/${image[0].filename}`;
 }
 
 function hasJsonStructure(str) {

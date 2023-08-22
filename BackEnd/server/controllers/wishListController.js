@@ -87,6 +87,16 @@ module.exports = {
       if (isCafeInWishlist) {
         return errorHandler.clientError(res, 'cafeExistsInWishlist', 400);
       }
+
+      const isCafeAddedByCustomer = await wishListModel.isCafeAddedByCustomer(
+        customer_id,
+        cafe_id,
+      );
+
+      if (isCafeAddedByCustomer) {
+        return errorHandler.clientError(res, 'cafeAlreadyWishlist', 400);
+      }
+
       try {
         await wishListModel.addCafeToWishList(wishlist_id, cafe_id);
 
