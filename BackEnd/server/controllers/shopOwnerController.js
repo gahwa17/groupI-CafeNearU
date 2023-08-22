@@ -38,9 +38,9 @@ function extractFilterData(rules, service_and_equipment) {
     const plug = service_and_equipment[0].content;
     const wifi = service_and_equipment[1].content;
     const smoking_area = service_and_equipment[2].content;
-    const dog = service_and_equipment[3].content;
-    const cat = service_and_equipment[4].content;
-    return [time_limit, min_order, plug, wifi, smoking_area, dog, cat];
+    const cat = service_and_equipment[3].content;
+    const dog = service_and_equipment[4].content;
+    return [time_limit, min_order, plug, wifi, smoking_area, cat, dog];
   } catch (err) {
     return 'Extract data Failed';
   }
