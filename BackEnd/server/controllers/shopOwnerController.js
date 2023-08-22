@@ -13,7 +13,8 @@ function generateImageURL(image) {
   if (!image || !image[0]?.filename) {
     return null;
   }
-  return `https://${process.env.HOSTNAME}/shopPics/${image[0].filename}`;
+  console.log(process.env.HOST_NAME);
+  return `https://${process.env.HOST_NAME}/shopPics/${image[0].filename}`;
 }
 
 function hasJsonStructure(str) {
@@ -289,6 +290,7 @@ module.exports = {
       }
 
       const primaryImg = generateImageURL(req.files.primary_image);
+      console.log(primaryImg);
       const secondaryImg1 = generateImageURL(req.files.secondary_image_1);
       const secondaryImg2 = generateImageURL(req.files.secondary_image_2);
 
