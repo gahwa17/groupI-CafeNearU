@@ -26,8 +26,7 @@ module.exports = {
         no_time_limit,
       } = req.query;
 
-      const userId =
-        process.env.HAS_ACCOUNT === 'true' ? extractUserIDFromToken(req) : null;
+      const userId = req.user ? req.user.id : undefined;
 
       const filterOptions = {
         keyword,

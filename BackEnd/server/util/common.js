@@ -44,38 +44,21 @@ module.exports = {
   validateProvider: (provider) => {
     return provider === 'native' || provider === 'google';
   },
-  /*hasJsonStructure: (str) => {
-    if (typeof str !== 'string') {
-      return false;
-    }
-
-    try {
-      const result = JSON.parse(str);
-      const type = Object.prototype.toString.call(result);
-      return type === '[object Object]' || type === '[object Array]';
-    } catch (err) {
-      return false;
-    }
-  },*/
   checkCustomerLogin: async (req, res, next) => {
-    try {
-      if (!req.header('Authorization')) {
-        process.env.HAS_ACCOUNT = false;
-        return next();
-      }
-      // Verify user token
+    if (req.header('Authorization')) {
       const token = req.header('Authorization').replace('Bearer ', '');
-
-      const decoded = jwt.verify(token, jwtSecret);
-      const userData = {
-        id: decoded.id,
-        name: decoded.name,
-      };
-
-      req.user = userData; // 將解析後的使用者資料儲存在 req.user
-      next();
-    } catch (error) {
-      errorHandler.clientError(res, 'invalidToken', 403);
+      jwt.verify(token, jwtSecret, (err, decoded) => {
+        if (err) {
+          req.user = undefined;
+          return next();
+        }
+        const { id } = decoded;
+        req.user = { id };
+        return next();
+      });
+    } else {
+      req.user = undefined;
+      return next();
     }
   },
 };
