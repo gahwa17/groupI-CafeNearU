@@ -32,10 +32,7 @@ module.exports = {
     try {
       const cafeNumbersPerType = 2;
 
-      const userId =
-        process.env.HAS_ACCOUNT === 'true'
-          ? extractUserIDFromToken(req)
-          : undefined;
+      const userId = req.user ? req.user.id : undefined;
 
       const [leisure, pet, workspace] = await Promise.all([
         processShopType('休閒', userId, cafeNumbersPerType, model),
