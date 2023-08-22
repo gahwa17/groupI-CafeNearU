@@ -2,6 +2,7 @@ const pool = require('../util/db');
 
 module.exports = {
   search: async (filterOptions) => {
+    console.log('filterOptions:', filterOptions);
     const {
       keyword,
       type,

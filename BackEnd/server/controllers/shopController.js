@@ -27,6 +27,7 @@ module.exports = {
       } = req.query;
 
       const userId = req.user ? req.user.id : undefined;
+      console.log('req.user:', req.user);
 
       const filterOptions = {
         keyword,
