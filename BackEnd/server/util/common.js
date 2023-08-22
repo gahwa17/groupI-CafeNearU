@@ -47,8 +47,10 @@ module.exports = {
   checkCustomerLogin: async (req, res, next) => {
     if (req.header('Authorization')) {
       const token = req.header('Authorization').replace('Bearer ', '');
+      console.log(token);
       jwt.verify(token, jwtSecret, (err, decoded) => {
         if (err) {
+          console.log('err:', err);
           req.user = undefined;
           return next();
         }
@@ -57,6 +59,7 @@ module.exports = {
         return next();
       });
     } else {
+      console.log('authorization header is missing');
       req.user = undefined;
       return next();
     }
