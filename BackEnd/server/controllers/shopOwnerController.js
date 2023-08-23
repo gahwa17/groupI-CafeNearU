@@ -507,4 +507,35 @@ module.exports = {
       errorHandler.serverError(res, error, 'internalServer');
     }
   },
+  isNewShopOwner: async (req, res) => {
+    try {
+      const header = req.get('Content-Type');
+      if (header !== 'application/json') {
+        return errorHandler.clientError(res, 'contentTypeValidate', 400);
+      }
+
+      const userId = extractUserIDFromToken(req);
+
+      const checkInfo = await model.canBePublished(userId);
+      if (
+        checkInfo.shop_name === null ||
+        checkInfo.menu_last_updated === null ||
+        checkInfo.status_last_updated === null
+      ) {
+        res.status(200).json({
+          data: {
+            new_owner: true,
+          },
+        });
+      } else {
+        res.status(200).json({
+          data: {
+            new_owner: false,
+          },
+        });
+      }
+    } catch (error) {
+      errorHandler.serverError(res, error, 'internalServer');
+    }
+  },
 };

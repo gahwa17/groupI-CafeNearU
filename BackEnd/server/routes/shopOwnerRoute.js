@@ -30,5 +30,6 @@ router.post('/seat-setting', userAuthorization, controller.setSeatType);
 router.put('/status', userAuthorization, controller.statusUpdate);
 router.post('/publish', userAuthorization, controller.changeProfilePubStatus);
 router.post('/unpublish', userAuthorization, controller.changeProfilePubStatus);
+router.get('/status', userAuthorization, controller.isNewShopOwner);
 
 module.exports = router;
