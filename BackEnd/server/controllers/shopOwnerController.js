@@ -94,12 +94,16 @@ module.exports = {
 
           const user = await model.getByID(userID);
 
+          const identity = 'shopOwner';
+
           const payload = {
             id: user.id,
             provider: user.provider,
             name: user.name,
             email: user.email,
+            identity: identity,
           };
+
           const accessToken = jwt.sign(payload, jwtSecret);
 
           const responseData = {
@@ -142,12 +146,14 @@ module.exports = {
           validateProvider(provider) &&
           (await bcrypt.compare(password, user.password))
         ) {
-          // Generate JWT
+          const identity = 'shopOwner';
+
           const payload = {
             id: user.id,
             provider: user.provider,
             name: user.user_name,
             email: user.email,
+            identity: identity,
           };
           const accessToken = jwt.sign(payload, jwtSecret);
 
