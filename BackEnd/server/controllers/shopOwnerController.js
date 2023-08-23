@@ -503,11 +503,6 @@ module.exports = {
   },
   isNewShopOwner: async (req, res) => {
     try {
-      const header = req.get('Content-Type');
-      if (header !== 'application/json') {
-        return errorHandler.clientError(res, 'contentTypeValidate', 400);
-      }
-
       const userId = extractUserIDFromToken(req);
 
       const checkInfo = await model.canBePublished(userId);
