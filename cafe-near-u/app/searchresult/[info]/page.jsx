@@ -1,17 +1,69 @@
 /* eslint-disable no-unused-vars */
 "use client";
-import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
-import { useState } from "react";
 
-import Header from "../components/Header.jsx";
-import Footer from "../components/Footer.jsx";
-import Filter from "../components/Filter.jsx";
-import storesHome from "../components/homepage/stores.js";
-import StoreCard from "../components/StoreCard";
+import { IconButton, Switch, Button, Dialog } from "@material-tailwind/react";
+import { useState, useEffect } from "react";
+
+import Header from "../../components/Header.jsx";
+import Footer from "../../components/Footer.jsx";
+import Filter from "../../components/Filter.jsx";
+import storesHome from "../../components/homepage/stores.js";
+import StoreCard from "../../components/StoreCard.jsx";
+import Cookies from "js-cookie";
 
 export default function h() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
+  const token = Cookies.get("token");
+
+  // 獲取網址中的keyword 儲存到cookie
+  const path = window.location.pathname;
+  const parts = path.split("/"); // 将路径部分拆分成数组
+  const keyword = parts[parts.length - 1];
+  console.log(keyword); // 输出："台北"
+
+  useEffect(() => {
+    handleSearch();
+  }, []);
+
+  const [searchResult, setsearchResult] = useState([]);
+  const handleSearch = async () => {
+    try {
+      // 向後端API發送請求，將輸入的搜索查詢作為參數傳遞
+      const response = await fetch(
+        `https://13.211.10.154/api/1.0/shops/search?${keyword}`,
+        { next: { revalidate: 0 } },
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data.data.shops);
+
+      if (response.ok) {
+        console.log("關鍵字搜尋成功");
+
+        const searchResults = data.data.shops;
+        setsearchResult(searchResults);
+      } else {
+        console.error("關鍵字搜尋失敗");
+      }
+    } catch (error) {
+      console.error("關鍵字搜尋，請求錯誤:", error);
+    }
+  };
+
+  //點icon搜尋
+  const [searchTerm, setSearchTerm] = useState("");
+  const jump = (info) => {
+    setSearchTerm(info);
+    console.log(info);
+    window.location.href = `/searchresult/${keyword + info}`;
+  };
 
   return (
     <>
@@ -33,50 +85,80 @@ export default function h() {
           <div className="h-full border-r border-gray-300 border-w-2 mb-1"></div>
           <div className="flex w-[70%] items-end gap-8 flex-nowrap overflow-scroll ">
             <div className="flex flex-col">
-              <IconButton variant="text" className="rounded-full">
+              <IconButton
+                variant="text"
+                className="rounded-full"
+                onClick={() => {
+                  jump("&type=工作");
+                }}
+              >
                 <span className="material-symbols-outlined">work</span>
               </IconButton>
               <span className="self-center  text-xs lg:text-sm">工作</span>
             </div>
             <div className="flex flex-col">
-              <IconButton variant="text" className="rounded-full">
+              <IconButton
+                variant="text"
+                className="rounded-full"
+                onClick={() => {
+                  jump("&type=休閒");
+                }}
+              >
                 <span className="material-symbols-outlined">local_cafe</span>
               </IconButton>
-              <span className="self-center  text-xs lg:text-sm">放鬆</span>
+              <span className="self-center  text-xs lg:text-sm">休閒</span>
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <IconButton variant="text" className="rounded-full">
-                <span class="material-symbols-outlined">groups</span>
+                <span className="material-symbols-outlined">groups</span>
               </IconButton>
               <span className="self-center text-xs lg:text-sm">聚會</span>
-            </div>
+            </div> */}
             <div className="flex flex-col">
-              <IconButton variant="text" className="rounded-full">
-                <span class="material-symbols-outlined">pets</span>
+              <IconButton
+                variant="text"
+                className="rounded-full"
+                onClick={() => {
+                  jump("&type=寵物");
+                }}
+              >
+                <span className="material-symbols-outlined">pets</span>
               </IconButton>
               <span className="self-center  text-xs lg:text-sm">寵物</span>
             </div>
             <div className="flex flex-col">
-              <IconButton variant="text" className="rounded-full">
-                <span class="material-symbols-outlined">schedule</span>
+              <IconButton
+                variant="text"
+                className="rounded-full"
+                onClick={() => {
+                  jump("&no_time_limit=true");
+                }}
+              >
+                <span className="material-symbols-outlined">schedule</span>
               </IconButton>
               <span className="self-center text-xs lg:text-sm">不限時</span>
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <IconButton variant="text" className="rounded-full">
-                <span class="material-symbols-outlined">cookie</span>
+                <span className="material-symbols-outlined">cookie</span>
               </IconButton>
               <span className="self-center  text-xs lg:text-sm">甜點</span>
-            </div>
+            </div> */}
             <div className="flex flex-col">
-              <IconButton variant="text" className="rounded-full">
-                <span class="material-symbols-outlined">power</span>
+              <IconButton
+                variant="text"
+                className="rounded-full"
+                onClick={() => {
+                  jump("&plug=true");
+                }}
+              >
+                <span className="material-symbols-outlined">power</span>
               </IconButton>
               <span className="self-center  text-xs lg:text-sm">插座</span>
             </div>
             <div className="flex flex-col">
               <IconButton variant="text" className="rounded-full">
-                <span class="material-symbols-outlined">casino</span>
+                <span className="material-symbols-outlined">casino</span>
               </IconButton>
               <span className="self-center text-xs lg:text-sm">好手氣</span>
             </div>
@@ -84,11 +166,11 @@ export default function h() {
         </div>
         <button
           onClick={handleOpen}
-          class="bg-[#D0B8A8] w-[15%] h-12 mt-28 hidden md:flex items-center justify-center space-x-2 font-bold text-white px-4 rounded-sm"
+          className="bg-[#D0B8A8] w-[15%] h-12 mt-28 hidden md:flex items-center justify-center space-x-2 font-bold text-white px-4 rounded-sm"
         >
           <img
-            src="sliders.png"
-            class="w-5 h-5"
+            src="../sliders.png"
+            className="w-5 h-5"
             fill="currentColor"
             viewBox="0 0 20 20"
           />
@@ -107,7 +189,7 @@ export default function h() {
       <hr className="border-gray-300 w-full" />
       <div className="flex w-full ">
         <div className="container w-[90%] mx-auto md:mx-[0%] md:w-[50%] md:ml-[10%] justify-between grid grid-cols-9 gap-8 mt-8">
-          <div className="flex justify-between items-center col-span-9 col-start-1  space-x-2">
+          <div className=" h-8 flex justify-between items-center col-span-9 col-start-1  space-x-2">
             <span className="col-span-6 md:col-span-3 col-start-1 self-center text-xl md:text-2xl me-8">
               顯示23間咖啡廳
             </span>
@@ -130,11 +212,11 @@ export default function h() {
 
             <button
               onClick={handleOpen}
-              class="bg-[#D0B8A8] md:hidden w-[30%] col-start-5 h-12  flex items-center justify-center space-x-2 font-bold text-white rounded-sm"
+              className="bg-[#D0B8A8] md:hidden w-[30%] col-start-5 h-12  flex items-center justify-center space-x-2 font-bold text-white rounded-sm"
             >
               <img
                 src="sliders.png"
-                class="w-5 h-5"
+                className="w-5 h-5"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               />
@@ -145,9 +227,9 @@ export default function h() {
             </Button>
           </div>
 
-          <div class="col-span-9 md:hidden h-[300px] bg-gray-200 "></div>
+          <div className="col-span-9 md:hidden h-[300px] bg-gray-200 "></div>
           <div className="col-span-9 grid grid-cols-9 gap-4 justify-center">
-            {storesHome.data.shops.workspace.map((store) => (
+            {searchResult.map((store) => (
               <StoreCard
                 className={"rounded-xl col-span-9 md:col-span-3 "}
                 key={store.id}
@@ -163,7 +245,7 @@ export default function h() {
             ))} */}
           </div>
         </div>
-        <div class="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
+        <div className="hidden md:block w-[30%] h-[920px] bg-gray-200 "></div>
       </div>
       <Footer className="fixed bottom-0" />
     </>
