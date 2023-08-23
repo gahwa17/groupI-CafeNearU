@@ -178,4 +178,24 @@ module.exports = {
       pool.releaseConnection();
     }
   },
+  getHistoryInput: async (userId) => {
+    let query = `
+      SELECT shops.id, shop_name, type, introduction, opening_hour, closing_hour, 
+      primary_image, secondary_image_1, secondary_image_2, address, telephone, facebook, ig, line, 
+      rules, service_and_equipment, 
+      DATE_FORMAT(menu_last_updated, "%Y-%m-%d %H:%i:%s") AS menu_last_updated, 
+      menus.category, 
+      GROUP_CONCAT(CONCAT(menus.item, '$', menus.price)) AS menu_items
+      FROM shops
+      LEFT JOIN menus ON shops.id = menus.cafe_id
+      WHERE shops.id = ? 
+      GROUP BY shops.id, menus.category`;
+
+    try {
+      const [result] = await pool.query(query, userId);
+      return result;
+    } finally {
+      await pool.releaseConnection();
+    }
+  },
 };

@@ -8,8 +8,6 @@ const {
   returnHeader,
 } = require('../util/common');
 
-/*test*/
-router.get('/test', returnHeader);
 
 router.get('/search', checkCustomerLogin, controller.search);
 router.get('/:id/basic-info', checkCustomerLogin, controller.getBasicInfo);

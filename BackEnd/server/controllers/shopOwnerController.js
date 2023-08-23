@@ -509,11 +509,6 @@ module.exports = {
   },
   isNewShopOwner: async (req, res) => {
     try {
-      const header = req.get('Content-Type');
-      if (header !== 'application/json') {
-        return errorHandler.clientError(res, 'contentTypeValidate', 400);
-      }
-
       const userId = extractUserIDFromToken(req);
 
       const checkInfo = await model.canBePublished(userId);
@@ -537,5 +532,65 @@ module.exports = {
     } catch (error) {
       errorHandler.serverError(res, error, 'internalServer');
     }
+  },
+  getHistoryInput: async (req, res) => {
+    if (req.user.identity !== 'shopOwner') {
+      return errorHandler.clientError(res, 'accessDenied', 400);
+    }
+    const userId = req.user.id;
+    const result = await model.getHistoryInput(userId);
+
+    const shopObj = {
+      id: result[0].id,
+      name: result[0].shop_name,
+      type: result[0].type,
+      nearest_MRT: result[0].nearst_MRT,
+      wishlist_item: result[0].wishlist_item,
+      introduction: result[0].introduction,
+      opening_hour: result[0].opening_hour,
+      closing_hour: result[0].closing_hour,
+      primary_image: result[0].primary_image,
+      secondary_image_1: result[0].secondary_image_1,
+      secondary_image_2: result[0].secondary_image_2,
+      address: result[0].address,
+      telephone: result[0].telephone,
+      facebook: result[0].facebook,
+      ig: result[0].ig,
+      line: result[0].line,
+      rules: result[0].rules,
+      service_and_equipment: result[0].service_and_equipment,
+    };
+
+    let menuCategories = [];
+    let menuItems = [];
+    if (result[0].categories !== null && result[0].menu_items !== null) {
+      for (let i = 0; i < result.length; i++) {
+        menuCategories.push(result[i].category);
+        const itemArr = result[i].menu_items.split(',');
+        const itemObj = itemArr.map((el, index) => {
+          const [name, price] = el.split('$');
+          return {
+            id: index + 1,
+            name,
+            price,
+          };
+        });
+        menuItems.push(itemObj);
+      }
+    } else {
+      menuCategories = null;
+      menuItems = null;
+    }
+
+    const menuObj = {
+      menu: {
+        last_updated: result[0].menu_last_updated,
+        categories: menuCategories,
+        items: menuItems,
+      },
+    };
+
+    res.status(200).json({ data: { shop: { ...shopObj, ...menuObj } } });
+    return 'history';
   },
 };
