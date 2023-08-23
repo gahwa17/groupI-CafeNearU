@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-// const base64 = require('base-64')
 
 const errorHandler = require('./errorHandler');
 
@@ -64,7 +63,23 @@ module.exports = {
       return next();
     }
   },
-  returnHeader: (req, res) => {
-    res.json(req.headers);
+  shopOwnerAuth: (req, res, next) => {
+    if (!req.header('Authorization')) {
+      return errorHandler.clientError(res, 'noToken', 401);
+    }
+    try {
+      const token = req.header('Authorization').replace('Bearer ', '');
+      const decoded = jwt.verify(token, jwtSecret);
+
+      req.user = {
+        id: decoded.id,
+        identity: decoded.identity,
+      };
+
+      return next();
+    } catch (error) {
+      console.log(error);
+      errorHandler.clientError(res, 'invalidToken', 403);
+    }
   },
 };
