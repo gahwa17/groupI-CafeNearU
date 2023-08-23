@@ -295,7 +295,7 @@ module.exports = {
       const {
         name,
         type,
-        nearest_MRT,
+        nearest_MRT = null,
         introduction = null,
         opening_hour,
         closing_hour,
