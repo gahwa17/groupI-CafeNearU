@@ -1,4 +1,4 @@
-import { Rating } from "@material-tailwind/react";
+import { Rating, Button } from "@material-tailwind/react";
 import Comment from "./Comment";
 
 function RatedIcon({ width, height }) {
@@ -32,8 +32,14 @@ function UnratedIcon({ width, height }) {
 export default function RatingAndComments({ summary, comments }) {
     return (
         <>
-            <div className="self-start m-4 mb-2 ml-0 text-xl font-light border-0 border-l-4 border-l-[#D0B8A8] pl-2 text-gray-800 flex flex-row gap-4 items-center">
+            <div className="self-start m-4 mb-2 ml-0 text-xl font-light border-0 border-l-4 border-l-[#D0B8A8] pl-2 text-gray-800 flex flex-row gap-4 items-center justify-between">
                 <div>評論 &nbsp; </div>
+                <Button
+                    variant=""
+                    className="p-2 border bg-[#af998a] text-white font-normal text-sm"
+                >
+                    撰寫新評論
+                </Button>
             </div>
             <div className="flex flex-row justify-start gap-4 mt-4 items-center mb-6 lg:mb-0">
                 <Rating

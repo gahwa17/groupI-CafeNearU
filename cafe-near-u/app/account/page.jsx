@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import Login from "../components/Login.jsx";
 import Header from "../components/Header.jsx";
 import Signup from "../components/Signup.jsx";
 import Footer from "../components/Footer.jsx";
+import ChangePassword from "../components/ChangePassword.jsx";
+import useFetchProfile from "../ApiHook/useFetchProfile.jsx";
+import useProfileUpdate from "../ApiHook/useProfileUpdate.jsx";
 import {
   Button,
   Dialog,
@@ -20,18 +23,26 @@ import {
 } from "@material-tailwind/react";
 
 export default function h() {
-  const [inputDisabled, setInputDisabled] = useState(true);
+  const token = Cookies.get("token");
+  // 獲取個人資料
+  const { userProfile, fetchProfile } = useFetchProfile();
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
-  const enableInput = () => {
-    setInputDisabled(false);
-  };
   const [isEditing, setIsEditing] = useState(false);
-  const [info, setInfo] = useState("自我介紹文字");
-  const [interest, setInterest] = useState("才不告訴你哩");
+  const [info, setInfo] = useState("");
+  const [interest, setInterest] = useState("");
   const [password, setPassword] = useState("密碼");
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
+    setInfo(userProfile.name);
+    setInterest(userProfile.school);
+  };
+
+  const handleSaveClick = () => {
+    setIsEditing(false); // 保存後，關閉編輯模式
   };
 
   const handleInfoChange = (e) => {
@@ -50,6 +61,7 @@ export default function h() {
 
   const defaultImageSrc = "account_circle.svg"; // 替換為預設圖片的 URL
 
+  // 上傳圖片
   const handleDrop = async (event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -60,6 +72,45 @@ export default function h() {
 
   const handleDragOver = (event) => {
     event.preventDefault();
+  };
+
+  const uploadProfilePicture = async (pictureFile) => {
+    const formData = new FormData();
+    formData.append("picture", pictureFile);
+
+    try {
+      const response = await fetch(
+        "https://13.211.10.154/api/1.0/customers/picture",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        fetchProfile();
+
+        const data = await response.json();
+        console.log("檔案上傳成功，圖片連結：", data.data.picture);
+        // setUserImage(data.data.picture);
+      }
+      console.error("檔案上傳失敗");
+    } catch (error) {
+      console.error("請求錯誤:", error);
+    }
+  };
+
+  const SaveProfile = () => {
+    const { handleSaveProfile } = useProfileUpdate(
+      info,
+      interest,
+      setIsEditing,
+      fetchProfile
+    );
+    handleSaveProfile();
   };
 
   return (
@@ -74,20 +125,23 @@ export default function h() {
         編輯大頭貼
       </div>
 
-      <div class="relative w-64 h-64 ml-[10%] mb-4 rounded-full overflow-hidden bg-white flex group">
+      <div
+        className="relative w-64 h-64 ml-[10%] mb-4 rounded-full overflow-hidden bg-white flex group"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        style={{ cursor: "pointer" }}
+      >
         <img
-          src={defaultImageSrc}
+          src={userProfile.picture || defaultImageSrc}
           alt="User"
           width={180}
           height={180}
           className="w-64 h-64 object-cover"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          style={{ cursor: "pointer" }}
         />
-        <div class="text-lg absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+
+        {/* <div className="text-lg absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
           <p>拖曳於此編輯大頭貼</p>
-        </div>
+        </div> */}
       </div>
 
       <div className="ml-[10%] w-[30%]">
@@ -108,7 +162,7 @@ export default function h() {
                 />
               ) : (
                 <div className="border-b border-gray-300 text-gray-500">
-                  {info}
+                  {userProfile.name || info}
                 </div>
               )}
             </div>
@@ -127,17 +181,29 @@ export default function h() {
                 />
               ) : (
                 <div className="border-b border-gray-300 text-gray-500">
-                  {interest}
+                  {userProfile.school || interest}
                 </div>
               )}
             </div>
-            <Button
-              onClick={handleEditClick}
-              variant="gradient"
-              className="mt-4"
-            >
-              {isEditing ? "儲存個人資料" : "編輯個人資料"}
-            </Button>
+
+            {isEditing ? (
+              <Button
+                onClick={(handleSaveClick, SaveProfile)}
+                variant="gradient"
+                className="mt-4"
+              >
+                儲存個人資料
+              </Button>
+            ) : (
+              <Button
+                onClick={handleEditClick}
+                variant="gradient"
+                className="mt-4"
+              >
+                編輯個人資料
+              </Button>
+            )}
+
             <div className="flex items-center justify-between mt-4 mb-4">
               <div className="flex items-center">
                 <div className="text-xl font-bold">帳號</div>
@@ -145,7 +211,7 @@ export default function h() {
             </div>
             <div>
               <div className="border-b border-gray-300 text-gray-500">
-                20230819@appworks.tw
+                {userProfile.email || info}
               </div>
             </div>
             <div className="flex items-center justify-between mt-4 mb-4">
@@ -154,42 +220,14 @@ export default function h() {
               </div>
             </div>
             <div>
-              <div className="border-b border-gray-300 text-gray-500">
-                {password}
-              </div>
+              <div className="border-b border-gray-300 text-gray-500"></div>
             </div>
             <Button onClick={handleOpen} variant="gradient" className="mt-4">
               修改密碼
             </Button>
+            {/* 要如何與背景一起消失 */}
             <Dialog size="xs" open={open} handler={handleOpen}>
-              <Card className=" mx-auto">
-                <div className="px-4 py-3 text-center font-bold text-xl text-[#030712]">
-                  修改密碼
-                </div>
-                <hr className="border-gray-300" />
-
-                <div className="container mx-auto flex items-center justify-start py-4">
-                  <p className="text-[#030712] text-xl ml-4 me-2 text-left font-logo">
-                    CafeNearU
-                  </p>
-                  <p className="text-[#030712] text-xl text-left font-inter me-4">
-                    提醒您要記得寫下來呦~
-                  </p>
-                </div>
-
-                <CardBody className="flex flex-col gap-4">
-                  <Input label="新密碼" size="lg" />
-                  <Input label="確認密碼" size="lg" />
-                </CardBody>
-
-                <CardFooter className="pt-0 mt-8">
-                  <div className="flex justify-center items-center">
-                    <Button className="bg-[#D0B8A8] px-6 py-2 text-lg">
-                      送出密碼
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
+              <ChangePassword />
             </Dialog>
           </div>
         </div>

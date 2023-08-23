@@ -1,12 +1,28 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import storesHome from "./components/homepage/stores";
 import Header from "./components/Header";
 import { IconButton } from "@material-tailwind/react";
 import StoreCard from "./components/StoreCard";
 import Footer from "./components/Footer";
+import useFetchHomepage from "./ApiHook/useFetchHomepage.jsx";
 
 export default function Home() {
   console.log(storesHome);
+
+  //點icon搜尋
+  const [searchTerm, setSearchTerm] = useState("");
+  const jump = (info) => {
+    setSearchTerm(info);
+    console.log(info);
+    window.location.href = `/searchresult/${info}`;
+  };
+  const { homepage, fetchHomepage } = useFetchHomepage();
+  useEffect(() => {
+    fetchHomepage();
+  }, []);
+
   return (
     <>
       <Header />
@@ -43,50 +59,80 @@ export default function Home() {
 
         <div className="flex items-end gap-8 mt-4 flex-nowrap overflow-scroll ">
           <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=工作");
+              }}
+            >
               <span className="material-symbols-outlined">work</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">工作</span>
           </div>
           <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=休閒");
+              }}
+            >
               <span className="material-symbols-outlined">local_cafe</span>
             </IconButton>
-            <span className="self-center  text-xs lg:text-sm">放鬆</span>
+            <span className="self-center  text-xs lg:text-sm">休閒</span>
           </div>
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <IconButton variant="text" className="rounded-full">
               <span class="material-symbols-outlined">groups</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">聚會</span>
-          </div>
+          </div> */}
           <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">pets</span>
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("type=寵物");
+              }}
+            >
+              <span className="material-symbols-outlined">pets</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">寵物</span>
           </div>
           <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">schedule</span>
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("no_time_limit=true");
+              }}
+            >
+              <span className="material-symbols-outlined">schedule</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">不限時</span>
           </div>
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <IconButton variant="text" className="rounded-full">
               <span class="material-symbols-outlined">cookie</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">甜點</span>
-          </div>
+          </div> */}
           <div className="flex flex-col">
-            <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">power</span>
+            <IconButton
+              variant="text"
+              className="rounded-full"
+              onClick={() => {
+                jump("plug=true");
+              }}
+            >
+              <span className="material-symbols-outlined">power</span>
             </IconButton>
             <span className="self-center  text-xs lg:text-sm">插座</span>
           </div>
           <div className="flex flex-col">
             <IconButton variant="text" className="rounded-full">
-              <span class="material-symbols-outlined">casino</span>
+              <span className="material-symbols-outlined">casino</span>
             </IconButton>
             <span className="self-center text-xs lg:text-sm">好手氣</span>
           </div>
@@ -97,7 +143,7 @@ export default function Home() {
           精選工作地點
         </div>
         <div className="col-span-12 grid grid-cols-12 gap-8">
-          {storesHome.data.shops.workspace.map((store) => (
+          {homepage.workspace?.map((store) => (
             <StoreCard
               className={"rounded-xl col-span-6 lg:col-span-3"}
               key={store.id}
@@ -109,7 +155,7 @@ export default function Home() {
           精選放鬆地點
         </div>
         <div className="col-span-12 grid grid-cols-12 gap-8">
-          {storesHome.data.shops.leisure.map((store) => (
+          {homepage.leisure?.map((store) => (
             <StoreCard
               className={"rounded-xl  col-span-6 lg:col-span-3"}
               key={store.id}
@@ -121,7 +167,7 @@ export default function Home() {
           擼貓擼狗好去處
         </div>
         <div className="col-span-12 grid grid-cols-12 gap-8">
-          {storesHome.data.shops.pet.map((store) => (
+          {homepage.pet?.map((store) => (
             <StoreCard
               className={"rounded-xl  col-span-6 lg:col-span-3"}
               key={store.id}
