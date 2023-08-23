@@ -45,7 +45,6 @@ module.exports = {
     return provider === 'native' || provider === 'google';
   },
   checkCustomerLogin: async (req, res, next) => {
-    console.log('req.header:', req.header);
     if (req.header('Authorization')) {
       const token = req.header('Authorization').replace('Bearer ', '');
       // console.log(token);
