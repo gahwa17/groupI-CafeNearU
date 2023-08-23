@@ -88,10 +88,7 @@ module.exports = {
         return errorHandler.clientError(res, 'profileNotFound', 404);
       }
 
-      const userId =
-        process.env.HAS_ACCOUNT === 'true'
-          ? extractUserIDFromToken(req)
-          : undefined;
+      const userId = req.user ? req.user.id : undefined;
 
       const result = await model.getBasicInfo(cafeId, userId);
 
