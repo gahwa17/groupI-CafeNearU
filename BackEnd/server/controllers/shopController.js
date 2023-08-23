@@ -96,7 +96,7 @@ module.exports = {
         id: result[0].id,
         name: result[0].shop_name,
         type: result[0].type,
-        nearest_MRT: result[0].nearst_MRT,
+        nearest_MRT: result[0].nearest_MRT,
         wishlist_item: result[0].wishlist_item,
         introduction: result[0].introduction,
         opening_hour: result[0].opening_hour,
