@@ -48,7 +48,7 @@ module.exports = {
     console.log('req.header:', req.header);
     if (req.header('Authorization')) {
       const token = req.header('Authorization').replace('Bearer ', '');
-      console.log(token);
+      // console.log(token);
       jwt.verify(token, jwtSecret, (err, decoded) => {
         if (err) {
           console.log('err:', err);
@@ -60,7 +60,7 @@ module.exports = {
         return next();
       });
     } else {
-      console.log('authorization header is missing');
+      // console.log('authorization header is missing');
       req.user = undefined;
       return next();
     }
