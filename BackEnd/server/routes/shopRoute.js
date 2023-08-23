@@ -2,7 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 const controller = require('../controllers/shopController');
-const { userAuthorization, checkCustomerLogin } = require('../util/common');
+const {
+  userAuthorization,
+  checkCustomerLogin,
+  returnHeader,
+} = require('../util/common');
+
+/*test*/
+router.get('/test', returnHeader);
 
 router.get('/search', checkCustomerLogin, controller.search);
 router.get('/:id/basic-info', checkCustomerLogin, controller.getBasicInfo);
