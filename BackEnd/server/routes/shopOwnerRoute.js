@@ -26,7 +26,7 @@ router.put(
   controller.basicInfoUpdate,
 );
 router.put('/menu', userAuthorization, controller.menuUpdate);
-router.put('/seat-setting', userAuthorization, controller.setSeatType);
+router.post('/seat-setting', userAuthorization, controller.setSeatType);
 router.put('/status', userAuthorization, controller.statusUpdate);
 router.post('/publish', userAuthorization, controller.changeProfilePubStatus);
 router.post('/unpublish', userAuthorization, controller.changeProfilePubStatus);
