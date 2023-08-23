@@ -24,7 +24,9 @@ const errorMessages = {
     extractDataFailed:
       'Unable to extract filter data. Please verify your input',
     profileNotFound: 'Profile Not Found',
+    wrongResetToken: 'Invalid or expired password reset token',
 
+    cafeAlreadyWishlist: 'Cafe is already added to one wishlist',
     // 401 Client Error (Token error)
     noToken: 'No token provided',
 
