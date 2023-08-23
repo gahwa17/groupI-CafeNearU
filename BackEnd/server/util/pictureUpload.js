@@ -17,7 +17,7 @@ module.exports = {
     const upload = multer({
       storage,
       limits: {
-        fileSize: 3 * 1024 * 1024, // 2MB
+        fileSize: 12 * 1024 * 1024, // 12MB
       },
     });
     return upload;
