@@ -31,7 +31,7 @@ async function processShopType(type, userId, cafeNumbersPerType, model) {
 module.exports = {
   getHomepage: async (req, res) => {
     try {
-      const cafeNumbersPerType = 2;
+      const cafeNumbersPerType = 4;
 
       const userId = req.user ? req.user.id : undefined;
 
