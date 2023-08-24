@@ -1,0 +1,271 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Cafe Near U",
+      "description": "AppWorks School 協作專案"
+    },
+    "tags":[
+        {
+            "name": "Users",
+            "description": "Customer and Shop owner related API"
+        }
+    ],
+    "host": "localhost:3000",
+    "basePath": "/",
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+      "/shops/signup": {
+        "post": {
+          "tags": ["Users"],
+          "summary": "Shoper Sign Up API",
+          "description": "Endpoint for Shoper Sign Up",
+          "parameters": [],
+          "requestBody": {
+            "$ref": "#/definitions/ShoperSignUpRequestBody"
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "schema": {
+                "$ref": "#/definitions/SuccessfulResponse"
+              }
+            },
+            "400": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "403": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "schema": {
+                "$ref": "#/definitions/ServerErrorResponse"
+              }
+            }
+          }
+        }
+      },
+      "/shops/signin": {
+        "post": {
+          "tags": ["Users"],
+          "summary": "Shoper Sign In API",
+          "description": "Endpoint for Shoper Sign In",
+          "parameters": [],
+          "requestBody": {
+            "$ref": "#/definitions/ShoperSignInRequestBody"
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "schema": {
+                "$ref": "#/definitions/SuccessfulResponse"
+              }
+            },
+            "400": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "403": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "schema": {
+                "$ref": "#/definitions/ServerErrorResponse"
+              }
+            }
+          }
+        }
+      },
+      "/shop-owners/profile": {
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get Shoper Profile API",
+          "description": "Endpoint to get Shoper's profile",
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Access token preceding Bearer",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "schema": {
+                "$ref": "#/definitions/SuccessfulResponse"
+              }
+            },
+            "400": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "401": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "403": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "schema": {
+                "$ref": "#/definitions/ServerErrorResponse"
+              }
+            }
+          }
+        },
+        "patch": {
+          "tags": ["Users"],  
+          "summary": "Update Shoper Profile API",
+          "description": "Endpoint to update Shoper's profile",
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "Access token preceding Bearer",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "requestBody": {
+            "$ref": "#/definitions/ShoperProfileUpdateRequestBody"
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "schema": {
+                "$ref": "#/definitions/SuccessfulResponse"
+              }
+            },
+            "400": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "403": {
+              "description": "Client Error",
+              "schema": {
+                "$ref": "#/definitions/ClientErrorResponse"
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "schema": {
+                "$ref": "#/definitions/ServerErrorResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "ShoperSignUpRequestBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "account": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "ShoperSignInRequestBody": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "ShoperProfileUpdateRequestBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessfulResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ClientErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ServerErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  

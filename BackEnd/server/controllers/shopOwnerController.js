@@ -259,7 +259,7 @@ module.exports = {
     const currentID = extractUserIDFromToken(req);
     const { new_password } = req.body;
 
-    if (new_password.trim() === '') {
+    if (!new_password || new_password.trim() === '') {
       return errorHandler.clientError(res, 'passwordValidate', 400);
     }
 
