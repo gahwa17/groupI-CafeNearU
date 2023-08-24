@@ -25,7 +25,7 @@ module.exports = {
     Redis.setCache(`reset-token#${userID}`, resetToken, 3600);
 
     // 產生重設密碼頁面的連結
-    const link = `http://${process.env.HOST_NAME}/api/1.0/customers/reset-password?token=${resetToken}&user_id=${userID}`;
+    const link = `https://${process.env.HOST_NAME}/api/1.0/customers/reset-password?token=${resetToken}&user_id=${userID}`;
 
     // 送出信件
     const payload = {
