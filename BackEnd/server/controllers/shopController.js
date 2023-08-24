@@ -155,10 +155,10 @@ module.exports = {
       };
       for (let i = 0; i < result.length; i++) {
         const obj = {
-          icon: result[0].icon,
-          type: result[0].type,
-          available_seats: result[0].available_seats,
-          total_seats: result[0].total_seats,
+          icon: result[i].icon,
+          type: result[i].type,
+          available_seats: result[i].available_seats,
+          total_seats: result[i].total_seats,
         };
         statusObj.seats.push(obj);
       }
