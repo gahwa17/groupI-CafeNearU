@@ -23,6 +23,7 @@ async function processShopType(type, userId, cafeNumbersPerType, model) {
     address: shop.address,
     operating_status: shop.operating_status,
     wishlist_item: shop.wishlist_item,
+    min_order: shop.min_order,
     seats: shop.seat_info,
   }));
 }
