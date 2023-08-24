@@ -55,6 +55,7 @@ module.exports = {
     s.shop_name AS name,
     s.primary_image,
     s.address,
+    s.operating_status,
     s.opening_hour,
     s.min_order,
     GROUP_CONCAT(se.icon) AS seat_icons,

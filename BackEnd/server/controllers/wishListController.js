@@ -204,6 +204,7 @@ module.exports = {
             name: shop.name,
             primary_image: shop.primary_image,
             address: shop.address,
+            operating_status: shop.operating_status,
             opening_hour: shop.opening_hour,
             seats: seats,
             min_order: shop.min_order,
