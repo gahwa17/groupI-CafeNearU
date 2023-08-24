@@ -123,7 +123,7 @@ module.exports = {
       operating_status, icon, seats.type, available_seats, total_seats
       FROM shops
       INNER JOIN seats ON shops.id = seats.cafe_id
-      WHERE shops.id = ? AND is_published = true`;
+      WHERE shops.id = ?`;
     try {
       const [result] = await pool.query(query, cafeId);
       return result;
