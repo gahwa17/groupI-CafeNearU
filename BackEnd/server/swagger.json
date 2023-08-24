@@ -1,271 +1,1514 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "Cafe Near U",
-      "description": "AppWorks School 協作專案"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Cafe Near U",
+    "description": "AppWorks School 協作專案"
+  },
+  "tags": [
+    {
+      "name": "Shop",
+      "description": "咖啡廳"
     },
-    "tags":[
-        {
-            "name": "Users",
-            "description": "Customer and Shop owner related API"
-        }
-    ],
-    "host": "localhost:3000",
-    "basePath": "/",
-    "schemes": ["http"],
-    "consumes": ["application/json"],
-    "produces": ["application/json"],
-    "paths": {
-      "/shops/signup": {
-        "post": {
-          "tags": ["Users"],
-          "summary": "Shoper Sign Up API",
-          "description": "Endpoint for Shoper Sign Up",
-          "parameters": [],
-          "requestBody": {
-            "$ref": "#/definitions/ShoperSignUpRequestBody"
+    {
+      "name": "Customer",
+      "description": "一般用戶"
+    },
+    {
+      "name": "Comment",
+      "description": "評論"
+    },
+    {
+      "name": "Wishlist",
+      "description": "許願清單"
+    }
+  ],
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/home": {
+      "get": {
+        "tags": ["Shop"],
+        "summary": "Get Recommended Cafes for Each Category",
+        "description": "Endpoint to get recommended cafes for each category on the homepage",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/HomepageSuccessResponse"
+            }
           },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "schema": {
-                "$ref": "#/definitions/SuccessfulResponse"
-              }
-            },
-            "400": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "403": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "500": {
-              "description": "Server Error",
-              "schema": {
-                "$ref": "#/definitions/ServerErrorResponse"
-              }
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
             }
-          }
-        }
-      },
-      "/shops/signin": {
-        "post": {
-          "tags": ["Users"],
-          "summary": "Shoper Sign In API",
-          "description": "Endpoint for Shoper Sign In",
-          "parameters": [],
-          "requestBody": {
-            "$ref": "#/definitions/ShoperSignInRequestBody"
           },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "schema": {
-                "$ref": "#/definitions/SuccessfulResponse"
-              }
-            },
-            "400": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "403": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "500": {
-              "description": "Server Error",
-              "schema": {
-                "$ref": "#/definitions/ServerErrorResponse"
-              }
-            }
-          }
-        }
-      },
-      "/shop-owners/profile": {
-        "get": {
-          "tags": ["Users"],
-          "summary": "Get Shoper Profile API",
-          "description": "Endpoint to get Shoper's profile",
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "description": "Access token preceding Bearer",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "schema": {
-                "$ref": "#/definitions/SuccessfulResponse"
-              }
-            },
-            "400": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "401": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "403": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "500": {
-              "description": "Server Error",
-              "schema": {
-                "$ref": "#/definitions/ServerErrorResponse"
-              }
-            }
-          }
-        },
-        "patch": {
-          "tags": ["Users"],  
-          "summary": "Update Shoper Profile API",
-          "description": "Endpoint to update Shoper's profile",
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "description": "Access token preceding Bearer",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "requestBody": {
-            "$ref": "#/definitions/ShoperProfileUpdateRequestBody"
-          },
-          "responses": {
-            "200": {
-              "description": "Successful Response",
-              "schema": {
-                "$ref": "#/definitions/SuccessfulResponse"
-              }
-            },
-            "400": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "403": {
-              "description": "Client Error",
-              "schema": {
-                "$ref": "#/definitions/ClientErrorResponse"
-              }
-            },
-            "500": {
-              "description": "Server Error",
-              "schema": {
-                "$ref": "#/definitions/ServerErrorResponse"
-              }
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
             }
           }
         }
       }
     },
-    "definitions": {
-      "ShoperSignUpRequestBody": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
+    "/shop-owners/basic-info": {
+      "put": {
+        "tags": ["Shop"],
+        "summary": "Update Shop Basic Info",
+        "description": "Endpoint for shop owners to update their shop's basic information",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/BasicInfoUpdateSuccessResponse"
+            }
           },
-          "account": {
-            "type": "string"
+          "401": {
+            "description": "Unauthorized - No Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedErrorResponse"
+            }
           },
-          "password": {
-            "type": "string"
+          "403": {
+            "description": "Forbidden - Wrong Token",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
           }
         }
-      },
-      "ShoperSignInRequestBody": {
-        "type": "object",
-        "properties": {
-          "account": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
-        }
-      },
-      "ShoperProfileUpdateRequestBody": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "SuccessfulResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "object"
-          }
-        }
-      },
-      "ClientErrorResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "error": {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string"
-              },
-              "message": {
-                "type": "string"
+      }
+    },
+    "/shop-owners/menu": {
+      "put": {
+        "tags": ["Shop"],
+        "summary": "Update Shop Menu",
+        "description": "Endpoint for shop owners to update their shop's menu",
+        "parameters": [],
+        "requestBody": {
+          "description": "Menu Data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ShopMenuUpdateRequest"
               }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/MenuUpdateSuccessResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Wrong Token",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },"/shop-owners/seat-setting": {
+      "post": {
+        "tags": ["Shop"],
+        "summary": "Create Seat Setting",
+        "description": "Endpoint for shop owners to create seat settings",
+        "parameters": [],
+        "requestBody": {
+          "description": "Seat Setting Data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ShopSeatSettingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopUpdateSuccessResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Wrong Token",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shop-owners/status": {
+      "put": {
+        "tags": ["Shop"],
+        "summary": "Update Shop Status",
+        "description": "Endpoint for shop owners to update their shop's operating status",
+        "parameters": [],
+        "requestBody": {
+          "description": "Shop Status Data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ShopStatusUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopUpdateSuccessResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Wrong Token",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shop-owners/publish": {
+      "post": {
+        "tags": ["Shop"],
+        "summary": "Publish Shop Profile",
+        "description": "Endpoint for shop owners to publish their shop's profile",
+        "parameters": [],
+        "requestBody": {
+          "description": "Publish Data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ShopPublishRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopUpdateSuccessResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Wrong Token",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shop-owners/unpublish": {
+      "post": {
+        "tags": ["Shop"],
+        "summary": "Unpublish Shop Profile",
+        "description": "Endpoint for shop owners to unpublish their shop's profile",
+        "parameters": [],
+        "requestBody": {
+          "description": "Unpublish Data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ShopUnpublishRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopUpdateSuccessResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthorizedErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden - Wrong Token",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops/search": {
+      "get": {
+        "tags": ["Shop"],
+        "summary": "Search Shops",
+        "description": "Endpoint for customers to search for shops",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "Optional keyword for searching",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The type of the shop (休閒 / 寵物 /工作 / 所有)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "plug",
+            "in": "query",
+            "description": "Optional plug availability",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "wifi",
+            "in": "query",
+            "description": "Optional wifi availability",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "smoking_area",
+            "in": "query",
+            "description": "Optional smoking area availability",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "dog",
+            "in": "query",
+            "description": "Optional dog availability",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "cat",
+            "in": "query",
+            "description": "Optional cat availability",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "min_order",
+            "in": "query",
+            "description": "Optional minimum order amount",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "no_time_limit",
+            "in": "query",
+            "description": "Optional no time limit availability",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Optional cursor for pagination",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopSearchSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops/:id/basic-info": {
+      "get": {
+        "tags": ["Shop"],
+        "summary": "Get Shop Basic Info",
+        "description": "Endpoint to get basic information of a shop by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Shop ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopBasicInfoSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops/:id/basic-info": {
+      "get": {
+        "tags": ["Shop"],
+        "summary": "Get Shop Basic Info",
+        "description": "Endpoint to get basic information of a shop by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Shop ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShopBasicInfoSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },                                    
+    "/shops-owners/signup": {
+      "post": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Shoper Sign Up API",
+        "description": "Endpoint for Shoper Sign Up",
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/definitions/ShoperSignUpRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops-owners/signin": {
+      "post": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Shoper Sign In API",
+        "description": "Endpoint for Shoper Sign In",
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/definitions/ShoperSignInRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shop-owners/profile": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Get Shoper Profile API",
+        "description": "Endpoint to get Shoper's profile",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
             }
           }
         }
       },
-      "ServerErrorResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
+      "patch": {
+        "tags": [
+          "Shop"
+        ],
+        "summary": "Update Shoper Profile API",
+        "description": "Endpoint to update Shoper's profile",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/definitions/ShoperProfileUpdateRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
           },
-          "error": {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string"
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shop-owners/update-password": {
+      "put": {
+        "tags": ["Shop"],
+        "summary": "Update Shop Owner Password",
+        "description": "Endpoint to update the password of a shop owner.",
+        "parameters": [],
+        "requestBody": {
+          "description": "New password data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ShopOwnerPasswordUpdateRequest"
               },
-              "message": {
-                "type": "string"
+              "example": {
+                "new_password": "new_password"
               }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "data": {
+                    "message": "Password updated successfully."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Invalid password format"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "No token provided"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid_token": {
+                    "value": {
+                      "error": "Invalid token"
+                    }
+                  },
+                  "duplicate_password": {
+                    "value": {
+                      "error": "Duplicate password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },    
+    "/customers/signup": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Customer Sign Up API",
+        "description": "Endpoint for Customer Sign Up",
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/definitions/CustomerSignUpRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/customers/signin": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Customer Sign In API",
+        "description": "Endpoint for Customer Sign In",
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/definitions/CustomerSignInRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/customers/profile": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customer Profile API",
+        "description": "Endpoint to get Customer's profile",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Update Customer Profile API",
+        "description": "Endpoint to update Customer's profile",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/definitions/CustomerProfileUpdateRequestBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/SuccessfulResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/customers/picture": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Update Customer Picture API",
+        "description": "Endpoint to update Customer's profile picture",
+        "parameters": [
+          {
+            "name": "picture",
+            "in": "formData",
+            "type": "file",
+            "description": "Image file (JPEG, PNG)"
+          }
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/UpdatePictureSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/customers/update-password": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Update Customer Password API",
+        "description": "Endpoint to update Customer's password",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "New password",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/UpdatePasswordRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/UpdatePasswordSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops/:cafe_id/comments": {
+      "post": {
+        "tags": ["Comment"],
+        "summary": "Add Cafe Comment API",
+        "description": "Endpoint to add a comment for a cafe",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "Comment details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/AddCafeCommentRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/CommentSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops/:cafe_id/comments/:comment_id": {
+      "delete": {
+        "tags": ["Comment"],
+        "summary": "Delete Cafe Comment API",
+        "description": "Endpoint to delete a comment for a cafe",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token preceding Bearer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "Comment ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/CommentSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/shops/:id/comments": {
+      "get": {
+        "tags": ["Comment"],
+        "summary": "Show All Reviews",
+        "description": "Endpoint to retrieve all reviews for a cafe",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Cafe ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/ShowAllReviewsSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wishlists": {
+      "post": {
+        "tags": ["Wishlist"],
+        "summary": "Create Wishlist",
+        "description": "Endpoint to create a new wishlist",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/CreateWishlistRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/CreateWishlistSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wishlists/:customer_id": {
+      "get": {
+        "tags": ["Wishlist"],
+        "summary": "Get Customer ALL Wishlist",
+        "description": "Endpoint to get all wishlists of a customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "Customer ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/GetAllWishlistSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wishlists/:wishlist_id/cafe/:cafe_id": {
+      "post": {
+        "tags": ["Wishlist"],
+        "summary": "Add Cafe to Wishlist",
+        "description": "Endpoint to add a cafe to a wishlist",
+        "parameters": [
+          {
+            "name": "wishlist_id",
+            "in": "path",
+            "description": "Wishlist ID",
+            "required": true,
+            "type": "int"
+          },
+          {
+            "name": "cafe_id",
+            "in": "path",
+            "description": "Cafe ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/AddCafeToWishlistRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/AddCafeToWishlistSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Wishlist"],
+        "summary": "Delete Cafe from Collection",
+        "description": "Endpoint to delete a cafe from a wishlist",
+        "parameters": [
+          {
+            "name": "wishlist_id",
+            "in": "path",
+            "description": "Wishlist ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cafe_id",
+            "in": "path",
+            "description": "Cafe ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/DeleteCafeFromWishlistRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/DeleteCafeFromWishlistSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wishlists/:wishlist_id/cafe": {
+      "get": {
+        "tags": ["Wishlist"],
+        "summary": "Get Cafe from Wishlist",
+        "description": "Endpoint to get cafes from a wishlist",
+        "parameters": [
+          {
+            "name": "wishlist_id",
+            "in": "path",
+            "description": "Wishlist ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/GetCafeFromWishlistSuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Client Error",
+            "schema": {
+              "$ref": "#/definitions/ClientErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerErrorResponse"
+            }
+          }
+        }
+      }
+    }            
+  },
+  "definitions": {
+    "ShoperSignUpRequestBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "ShoperSignInRequestBody": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "ShoperProfileUpdateRequestBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "SuccessfulResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "ClientErrorResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "ServerErrorResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
             }
           }
         }
       }
     }
   }
-  
+}
