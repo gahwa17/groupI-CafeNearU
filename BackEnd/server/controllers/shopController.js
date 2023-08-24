@@ -57,6 +57,7 @@ module.exports = {
           address: result[i].address,
           operating_status: result[i].operating_status,
           wishlist_item: result[i].wishlist_item,
+          min_order: result[i].min_order,
           seats: JSON.parse(`[${result[i].seat_info}]`),
         };
         shopArr.push(obj);

@@ -63,7 +63,7 @@ module.exports = {
     }
 
     let query = `SELECT shops.id, shop_name, primary_image,
-    address, operating_status, 
+    address, operating_status, min_order,
     GROUP_CONCAT(
       '{ "icon": "', seats.icon, '", "type": "', seats.type,
       '", "available_seats": ', seats.available_seats,
