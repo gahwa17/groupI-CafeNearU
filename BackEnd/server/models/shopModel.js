@@ -55,7 +55,7 @@ module.exports = {
       conditions += ` AND dog = true`;
     }
     if (min_order) {
-      conditions += ` AND min_order < ?`;
+      conditions += ` AND min_order <= ?`;
       queryParams.push(`${min_order}`);
     }
     if (no_time_limit) {
