@@ -28,6 +28,11 @@ app.use('/api/1.0/wishLists', wishListRoutes);
 app.use('/api/1.0/shop-owners', shopOwnerRoutes);
 app.use('/api/1.0/shops', shopRoutes);
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 const intervalTime = 12 * 60 * 60 * 1000; // 12 hours
 updateCommentDashboard();
 setInterval(updateCommentDashboard, intervalTime);
