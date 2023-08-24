@@ -147,13 +147,6 @@ module.exports = {
     try {
       const cafeId = req.params.id * 1;
 
-      const cafeProfileExistence = await model.findPublishedCafeProfileById(
-        cafeId,
-      );
-      if (!cafeProfileExistence) {
-        return errorHandler.clientError(res, 'profileNotFound', 404);
-      }
-
       const result = await model.getCurrentStatus(cafeId);
       const statusObj = {
         last_update: result[0].status_last_updated,
