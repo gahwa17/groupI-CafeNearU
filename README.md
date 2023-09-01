@@ -44,6 +44,16 @@ CafeNearU 是一個咖啡廳地圖的協作專案，旨在「終結咖啡廳選�
 
     ![圖片](https://github.com/gahwa17/groupI-CafeNearU/assets/52663020/b7c7ab8e-a07f-4fe4-9ad5-33703fba23f3)
 
+## 如何啟用
+1. 安裝套件： `npm install`
+2. 啟動 MySQL 伺服器
+3. 匯入資料庫： `mysql -u <user_name> -p <cafe_near_u> < cafe_near_u.sql`
+4. 建立設定檔案： `.env` （可參考範本 `.env-template` 架構）
+   1. 設定 `DB_HOST`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` 用於 MySQL 伺服器
+   2. 設定 `JWT_SECRET` 用於 JWT
+   3. 設定 `DISCORD_BOT_TOKEN`, `DISCORD_SERVER_ID`, `DISCORD_CHANNEL_ID`, `DISCORD_WEBHOOK_URL` 用於 Discord 機器人
+   4. 設定 `EMAIL_USERNAME`, `EMAIL_PASSWORD` 用於信箱驗證
+5. 啟動伺服器： `nodemon app.js`
 
 ## 技術與負責項目
 - **後端**：Node.js, Express.js
