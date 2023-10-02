@@ -44,6 +44,10 @@ CafeNearU 是一個咖啡廳地圖的協作專案，旨在「終結咖啡廳選�
 
     ![圖片](https://github.com/gahwa17/groupI-CafeNearU/assets/52663020/b7c7ab8e-a07f-4fe4-9ad5-33703fba23f3)
 
+## 系統架構圖
+![圖片](https://github.com/gahwa17/groupI-CafeNearU/assets/52663020/5a914fb0-ea5d-490d-87ab-cf797a7624f0)
+
+
 ## 如何啟用
 1. 安裝套件： `npm install`
 2. 啟動 MySQL 伺服器
